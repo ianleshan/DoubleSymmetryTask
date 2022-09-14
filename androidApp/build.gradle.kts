@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
     defaultConfig {
         applicationId = "com.ianleshan.doublesymmetrytask.android"
         minSdk = 23
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
     }
@@ -43,7 +43,14 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.0")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
     implementation("androidx.activity:activity-compose:1.5.1")
     implementation("me.onebone:toolbar-compose:2.3.4")
+    implementation("androidx.compose.foundation:foundation:1.3.0-beta02")
+    implementation("androidx.compose.material:material:1.3.0-beta02")
+    implementation("io.coil-kt:coil-compose:2.2.1")
+
 
 }
