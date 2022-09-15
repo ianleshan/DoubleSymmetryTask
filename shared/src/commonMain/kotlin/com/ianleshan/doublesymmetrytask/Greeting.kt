@@ -43,7 +43,9 @@ data class Session(
     @SerialName("listener_count") val listenerCount: Int,
     val genres: List<String>,
     @SerialName("current_track") val currentTrack: Track,
-)
+) {
+    fun getGenres(): String = genres.joinToString(", ")
+}
 
 @Serializable
 data class Track(
