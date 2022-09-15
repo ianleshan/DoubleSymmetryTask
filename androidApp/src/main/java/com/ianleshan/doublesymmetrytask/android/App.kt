@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
@@ -29,8 +28,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
-import com.ianleshan.doublesymmetrytask.Greeting
-import com.ianleshan.doublesymmetrytask.Session
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ianleshan.doublesymmetrytask.SessionsViewModel
+import com.ianleshan.doublesymmetrytask.UIState
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -38,19 +38,15 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @Composable
 fun App() {
 
-    var sessions: List<Session> by remember {
-        mutableStateOf(emptyList())
-    }
-
     var searchTerm by remember {
         mutableStateOf("")
     }
 
+    val viewModel: SessionsViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsState(initial = UIState())
+
     LaunchedEffect(key1 = Unit, block = {
-
-        val greeting = Greeting()
-        sessions = greeting.getHtml()
-
+        viewModel.onCreate()
     })
 
     val state = rememberCollapsingToolbarScaffoldState()
@@ -59,7 +55,6 @@ fun App() {
         state = state,
         scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
         toolbar = {
-
             Box(
                 modifier = Modifier
                     .background(topBarColor)
@@ -100,7 +95,7 @@ fun App() {
             val textSize = (18 + (34 - 18) * state.toolbarState.progress).sp
 
             Text(
-                text = "Discover",
+                text = uiState.title,
                 modifier = Modifier
                     .road(Alignment.BottomCenter, Alignment.BottomStart)
                     .padding(
@@ -115,12 +110,11 @@ fun App() {
 
         }
     ) {
-
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(8.dp),
             content = {
-                items(sessions) { session ->
+                items(uiState.sessions) { session ->
                     SessionCard(
                         modifier = Modifier.padding(8.dp),
                         session,

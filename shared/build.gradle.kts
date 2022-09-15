@@ -24,6 +24,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                api("com.doublesymmetry:multiplatform-viewmodel:0.0.3")
             }
         }
         val commonTest by getting {
@@ -34,6 +35,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+                api("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
             }
         }
         val androidTest by getting
@@ -49,6 +51,14 @@ kotlin {
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
             }
         }
+//        ios {
+//            binaries {
+//                framework {
+//                    baseName = "shared"
+//                    export(Deps.viewmodel) // required to expose the class to iOS
+//                }
+//            }
+//        }
         val iosX64Test by getting
         val iosArm64Test by getting
         val iosSimulatorArm64Test by getting
