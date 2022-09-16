@@ -45,17 +45,25 @@ class SessionsViewModel : ViewModel() {
 
     @OptIn(FlowPreview::class)
     fun onCreate() {
-        viewModelScope.launch {
-            val sessions = getSessions()
-            val newState = _uiState.value.copy(
-                discoverSessions = sessions,
-            )
-            _uiState.emit(newState)
-        }
+//        viewModelScope.launch {
+//            try {
+//                val sessions = getSessions()
+//                val newState = _uiState.value.copy(
+//                    discoverSessions = sessions,
+//                )
+//                _uiState.emit(newState)
+//            } catch (e: Exception) {
+//                _uiState.emit(
+//                    UIState(
+//                        error = e
+//                    )
+//                )
+//            }
+//        }
 
         viewModelScope.launch {
             searchEntry
-                .debounce(1000)
+                .debounce(500)
                 .collect { searchTerm ->
                     val sessions = searchSessions(searchTerm)
                     _uiState.emit(
@@ -64,6 +72,25 @@ class SessionsViewModel : ViewModel() {
                         )
                     )
                 }
+        }
+    }
+
+    fun loadNextPage() {
+        viewModelScope.launch {
+            try {
+                val sessions = getSessions()
+                val newState = _uiState.value.copy(
+                    discoverSessions = _uiState.value.discoverSessions.plus(sessions),
+                    currentPage = _uiState.value.currentPage + 1,
+                )
+                _uiState.emit(newState)
+            } catch (e: Exception) {
+                _uiState.emit(
+                    UIState(
+                        error = e
+                    )
+                )
+            }
         }
     }
 
@@ -85,8 +112,12 @@ data class UIState(
     val searchSessions: List<Session> = emptyList(),
     val title: String = "Discover",
     val searchTerm: String = "",
+    val currentPage: Int = 0,
+    val error: Exception? = null
 ) {
     fun getList(): List<Session> = if (searchTerm.isBlank()) discoverSessions else searchSessions
+    fun hasNextPage() = currentPage <= 5 && searchTerm.isBlank()
+
 }
 
 @Serializable
