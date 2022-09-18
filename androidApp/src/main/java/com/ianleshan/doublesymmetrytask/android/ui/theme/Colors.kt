@@ -1,4 +1,4 @@
-package com.ianleshan.doublesymmetrytask.android
+package com.ianleshan.doublesymmetrytask.android.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
